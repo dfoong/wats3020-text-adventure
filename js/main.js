@@ -10,25 +10,35 @@ let currentPage = null;
 ////////////////////////////////////////////////////////////////////////////////
 
 // TODO: Prompt the user for their name. Store the name in the variable `playerName`.
-
+playerName = prompt("What is your name?");
 
 
 // TODO: Create a function called `getCurrentPage()`. It should accept one
 // parameter, which is the `slug` for the current page. This function will fetch
 // the current page and return a page object using the `slug` value for a key.
-
+function getCurrentPage(slug){
+  currentPage = storyData[slug];
+  return currentPage;
+}
 
 
 // TODO: Create a function called `recordChoice()` that will accept a `slug`
 // parameter and add it to the `choiceList` Array (probably using `push()`).
 
-
+function recordChoice(slug){
+  choiceList.push(slug);
+  console.log(`Added ${slug} to choiceList Array.`);
+}
 
 // TODO: Create a function called `undoChoice()` that will remove the last
 // `slug` in the `choiceList` Array and then will return the last `slug` in the
 // `choiceList` Array.
 
-
+function undoChoice(){
+  choiceList.pop(); // Remove the last item in the `choiceList` Array
+  console.log(`Returning to previous page.`);
+  return choiceList[choiceList.length-1];
+}
 
 // TODO: Create a function called `changePage()` that accepts a parameter called
 // `slug` and which handles "turning the page" in three steps:
@@ -38,7 +48,12 @@ let currentPage = null;
 //     function (and give it the `slug` as a parameter).
 //  3. It should invoke the `updatePage()` function (and give it the
 //     `currentPage` object as a parameter).
-
+function changePage(slug){
+  //Record the latest choice of the user
+  recordChoice(slug);
+  currentPage = getCurrentPage(slug);
+  updatePage(currentPage);
+}
 
 
 ///////////////////////////////////////////////////
@@ -56,10 +71,11 @@ let currentPage = null;
 // link to.                                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 
+// Debbie's notes: Changed crow to robin, added story depth, and changed most of the endings.
 var storyData = {
-    title: "The Crow and the Fox",
+    title: "The Robin and the Fox",
     p1: {
-        text: `You are a crow named ${playerName}. You are flying high above the
+        text: `You are a beautiful robin named ${playerName}. You are flying high above the
                 countryside. You see a farm off to the West, and your home forest
                 off to the East.`,
         choices: [
@@ -73,8 +89,9 @@ var storyData = {
         ]
     },
     homeEnd : {
-        text: `You return home to your comfy roost in the forest canopy and
-                enjoy a hot cup of tea!
+        text: `You return home to your comfy roost in the cool forest canopy and
+                enjoy a hot cup of tea. Outside your nest, the rich smell of pine
+                and the sound of the wind gently rustling comfort you.
                 <br><br>
                 The End.`,
         choices: [
@@ -85,8 +102,9 @@ var storyData = {
         ]
     },
     p2 : {
-        text: `You fly over the Farm and see a piece of cheese lying on the
-                picnic table. There are no people around that you can see. The
+        text: `You fly over the Farm and see a <i>hunk of cheese</i> lying on the
+                picnic table. It's gourmet, and looks fresh and perfect.
+                There are no people around that you can see. The
                 cheese looks very tasty, but you are worried there might be a
                 person or, even worse, a CAT lurking somewhere you can't see.`,
         choices: [
@@ -101,7 +119,7 @@ var storyData = {
     },
     p3 : {
         text: `You swoop down and pluck the cheese from the table. Just as you
-                grab hold of the cheese, the farmer's cat leaps onto the table
+                grab hold of the cheese, the farmer's tuxedo cat leaps onto the table
                 ahead of you!`,
         choices: [
             {
@@ -116,7 +134,8 @@ var storyData = {
     basketEnd : {
         text: `You fly directly into a picnic basket, which slams shut behind you.
                 You are stuck until some kind human comes to open the basket.
-                But at least the cat didn't eat you!
+                The cat nudges the basket with its paw.
+                It purrs contentedly, welcoming you to the farm! 
                 <br><br>
                 The End`,
         choices: [
@@ -127,11 +146,11 @@ var storyData = {
         ]
     },
     p4 : {
-        text: `You zoom towards the cat, who is surprised by the direct approach
+        text: `You zoom towards the sleek cat, who is surprised by the direct approach
                 and leaps off the table. You pull up sharply and make it over the
                 big oak tree to a safe cruising altitude. The sun is shining,
                 the wind is beneath your wings, and you have a beak full of
-                cheese.`,
+                hard-earned cheese.`,
         choices: [
             {
                 text: `Find somewhere nice to eat your cheese.`,
@@ -159,7 +178,7 @@ var storyData = {
     shareCheese : {
         text: `You hop down to the ground and Mr. Fox helps you break the cheese
                 in half. He is very grateful to you for sharing your cheese, and
-                he gives you a lovely ribbon for your nest.
+                he gives you a lovely ribbon for your nest. It is smooth satin.
                 <br><br>
                 The End`,
         choices: [
@@ -178,15 +197,15 @@ var storyData = {
                 text: `Sing a song for Mr. Fox.`,
                 link: 'dropCheeseEnd'
             }, {
-                text: `Remain silent.`,
+                text: `Stare at Mr. Fox warily.`,
                 link: 'p7'
             }
         ]
     },
     dropCheeseEnd : {
         text: `You open your beak to sing a lovely song, and your cheese comes
-                tumbling out. Mr. Fox quickly snaps the cheese out of the air
-                as it falls and gobbles it up!
+                tumbling out. Mr. Fox laughs at you but sings along. "${playerName}, that was good. 
+                Let's have a karaoke session with Kpop songs." You share the cheese and find juicy blackberries to go with it.
                 <br><br>
                 The End`,
         choices: [
@@ -197,8 +216,14 @@ var storyData = {
         ]
     },
     p7 : {
-        text: `You remain silent through all of Mr. Fox's flattery. In the end,
-                he knows you won't fall for his tricks, and he leaves you alone.
+        text: `Mr. Fox starts quoting Deadpool the movie, "LOOK! I'm a teenage girl, 
+I'd rather be anywhere than here! I'm all about long sullen silences, 
+followed by mean comments, followed by more silence! So what's it gonna be: 
+long sullen silence or mean comment? Go on, take your pick."
+<br><br>
+You are a little shocked, "...You got me in a box here."
+<br>
+Mr. Fix titters but leaves after swishing his tail.
                 <br><br>
                 Finally able to relax in quiet, you enjoy your well-earned
                 cheese.
@@ -258,5 +283,7 @@ undo.addEventListener('click', function(e){
 })
 
 currentPage = storyData.p1;
+recordChoice('p1');
 updatePage(currentPage);
+
 
